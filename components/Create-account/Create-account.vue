@@ -5,8 +5,16 @@
     </div>
     <h1 class="text-xl"><b>Bem-vindo</b></h1>
     <span class="text-md">
-      Preencha o formulário abaixo para acessar o sistema
+      Preencha o formulário abaixo para criar sua conta
     </span>
+
+    <div class="flex flex-col mt-5">
+      <label for="email"><b>Nome</b></label>
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+        <Icon name="solar:user-bold" class="mx-3" />
+        <input type="text" class="w-full h-full outline-none" />
+      </div>
+    </div>
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>E-mail</b></label>
@@ -24,6 +32,14 @@
       </div>
     </div>
 
+    <div class="flex flex-col mt-5">
+      <label for="email"><b>Confirmar senha</b></label>
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+        <Icon name="solar:lock-password-bold" class="mx-3" />
+        <input type="text" class="w-full h-full outline-none" />
+      </div>
+    </div>
+
     <div class="flex justify-end mt-3">
       <span class="text-zinc-700">Esqueceu a senha?</span>
     </div>
@@ -35,10 +51,11 @@
         <b>ENTRAR</b>
       </button>
     </div>
+    
 
     <div class="flex justify-center mt-3">
-      <nuxt-link to="/create-account">
-        <span class="text-zinc-700 cursor-pointer">Ainda não sou registrado</span>
+      <nuxt-link to="/login">
+        <span class="text-zinc-700 cursor-pointer">Ja sou cadastrado</span>
       </nuxt-link>
     </div>
   </div>
