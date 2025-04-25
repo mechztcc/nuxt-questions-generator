@@ -48,7 +48,7 @@
             />
           </div>
 
-          <div class="flex items-center">
+          <div class="flex items-center w-full">
             <Icon
               name="solar:file-send-bold"
               size="1em"
@@ -59,19 +59,27 @@
 
           <div class="flex w-full mt-3">
             <button
-              class="bg-gradient-to-r from-purple-400 to-purple-500 rounded-lg w-full h-full hover:from-purple-300 hover:to-purple-500 py-1 px-1 text-zinc-50"
+              class="bg-purple-400 rounded-lg w-full h-full hover:from-purple-300 hover:to-purple-500 py-1 px-1 text-zinc-50"
               @click="execute()"
             >
-              <b>ENVIAR</b>
+              <b v-if="status !== 'pending'">ENVIAR</b>
+
+              <b v-if="status == 'pending'">
+                ENVIANDO
+              </b>
             </button>
           </div>
         </div>
       </div>
-    </div>
 
-    <span v-if="data"> {{ data }} </span>
+      <div class="col-span-3 mt-10" v-if="data">
+        <QuestionVisualizer v-for="(item, index) in data.questions" :key="index" :question="item" />
+        
+      </div>
+    </div>
   </div>
 </template>
+
 
 <script lang="ts" setup>
 import { useDropZone } from "@vueuse/core";
@@ -122,7 +130,7 @@ async function extractTextFromDocx(file: File) {
   const arrayBuffer = await file.arrayBuffer();
   const result = await mammoth.extractRawText({ arrayBuffer });
 
-  return result.value
+  return result.value;
 }
 
 const body = computed(() => {
@@ -131,7 +139,7 @@ const body = computed(() => {
   };
 });
 
-const { execute, data } = useFetch("http://localhost:3000/users/upload-file", {
+const { execute, data, status } = useFetch("http://localhost:3000/users/upload-file", {
   immediate: false,
   method: "post",
   body,

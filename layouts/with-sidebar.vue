@@ -2,7 +2,7 @@
   <div class="flex">
     <Sidebar />
 
-    <div class="w-full">
+    <div class="w-full my-10">
       <slot />
     </div>
   </div>

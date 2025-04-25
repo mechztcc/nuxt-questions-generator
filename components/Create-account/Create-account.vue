@@ -10,7 +10,7 @@
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>Nome</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
         <Icon name="solar:user-bold" class="mx-3" />
         <input type="text" class="w-full h-full outline-none" />
       </div>
@@ -18,7 +18,7 @@
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>E-mail</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
         <Icon name="solar:mailbox-bold" class="mx-3" />
         <input type="text" class="w-full h-full outline-none" />
       </div>
@@ -26,7 +26,7 @@
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>Senha</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
         <Icon name="solar:lock-password-bold" class="mx-3" />
         <input type="text" class="w-full h-full outline-none" />
       </div>
@@ -34,7 +34,7 @@
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>Confirmar senha</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2">
+      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
         <Icon name="solar:lock-password-bold" class="mx-3" />
         <input type="text" class="w-full h-full outline-none" />
       </div>
