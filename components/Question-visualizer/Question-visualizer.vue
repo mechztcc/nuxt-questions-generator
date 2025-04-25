@@ -18,7 +18,26 @@
       <div class="relative group" @click="onSaveQuestion()">
         <div
           :class="{
-            'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-purple-300 cursor-pointer': true,
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full cursor-pointer': true,
+            'bg-green-200': question.level == 'fácil',
+            'bg-indigo-300': question.level == 'normal',
+            'bg-red-200': question.level == 'difícil',
+          }"
+        >
+          <Icon name="solar:star-bold" class="text-zinc-50" v-for="(item, index) in starsLevels" :key="index"/>
+        </div>
+
+        <span
+          class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+        >
+          {{ question.level }}
+        </span>
+      </div>
+
+      <div class="relative group" @click="onSaveQuestion()">
+        <div
+          :class="{
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-purple-300 cursor-pointer  mx-1': true,
             'bg-purple-300': savedQuestion,
             ' bg-zinc-100': !savedQuestion,
           }"
@@ -37,7 +56,7 @@
         <div
           @click="onHandleCorrect"
           :class="{
-            'flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-purple-300 cursor-pointer mx-1': true,
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-purple-300 cursor-pointer': true,
             blinking: markedAsCorrect != undefined && !showCorrect,
           }"
         >
@@ -131,6 +150,21 @@ const showCorrect = ref<boolean>(false);
 const markedAsWrong = ref<number[]>([]);
 const markedAsCorrect = ref<number>();
 const savedQuestion = ref<boolean>();
+
+const starsLevels = computed(() => {
+  const { level } = props.question;
+
+  const total =
+    level === "fácil"
+      ? 1
+      : level === "normal"
+      ? 2
+      : level === "difícil"
+      ? 3
+      : 0;
+
+  return total;
+});
 
 const correctAnswer = computed(() => {
   return (
