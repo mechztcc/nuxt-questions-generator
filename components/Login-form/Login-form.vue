@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col justify-center px-10 py-10 h-full">
+  <div class="flex flex-col justify-center px-10 lg:px-20 py-10 h-full">
     <div class="flex justify-center">
       <Icon name="solar:bolt-bold" size="4em" class="mx-3 mb-10" />
     </div>
@@ -10,22 +10,54 @@
 
     <div class="flex flex-col mt-5">
       <label for="email"><b>E-mail</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
-        <Icon name="solar:mailbox-bold" class="mx-3" />
+      <div
+        :class="{
+          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'border-red-200': errors.email,
+        }"
+      >
+        <Icon
+          name="solar:mailbox-bold"
+          :class="{
+            'mx-3': true,
+            'text-red-300': errors.email,
+            'text-purple-300': email,
+          }"
+        />
         <input type="text" class="w-full h-full outline-none" v-model="email" />
       </div>
+
+      <p v-if="errors.email" class="text-red-400 text-sm mt-1">
+        {{ errors.email }}
+      </p>
     </div>
 
     <div class="flex flex-col mt-5">
       <label for="password"><b>Senha</b></label>
-      <div class="flex items-center border rounded-lg py-3 px-3 mt-2 bg-white">
-        <Icon name="solar:lock-password-bold" class="mx-3" />
+      <div
+        :class="{
+          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'border-red-200': errors.password,
+        }"
+      >
+        <Icon
+          name="solar:lock-password-bold"
+          :class="{
+            'mx-3': true,
+            'text-red-300': errors.password,
+            'text-purple-300': password,
+          }"
+        />
         <input
           type="password"
           class="w-full h-full outline-none"
           v-model="password"
         />
       </div>
+
+      <p v-if="errors.password" class="text-red-400 text-sm mt-1">
+        {{ errors.password }}
+      </p>
     </div>
 
     <div class="flex justify-end mt-3">
@@ -99,8 +131,8 @@ async function onSubmit() {
   if (data.value) {
     resetForm();
     const credentials = data.value;
-    useLocalStorage('credentials', credentials);
-    
+    useLocalStorage("credentials", credentials);
+
     router.push("/");
   }
 }
