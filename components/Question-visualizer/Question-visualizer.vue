@@ -15,9 +15,13 @@
     </div>
 
     <div class="flex justify-end mb-5">
-      <div class="relative group">
+      <div class="relative group" @click="onSaveQuestion()">
         <div
-          class="flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-purple-300 cursor-pointer"
+          :class="{
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-purple-300 cursor-pointer': true,
+            'bg-purple-300': savedQuestion,
+            ' bg-zinc-100': !savedQuestion,
+          }"
         >
           <Icon name="solar:bookmark-line-duotone" class="" />
         </div>
@@ -29,17 +33,16 @@
         </span>
       </div>
 
-
       <div class="relative group">
         <div
-        @click="onHandleCorrect"
-        :class="{
-          'flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-purple-300 cursor-pointer mx-1': true,
-          blinking: markedAsCorrect != undefined && !showCorrect,
-        }"
-      >
-        <Icon name="solar:question-square-broken" class="" />
-      </div>
+          @click="onHandleCorrect"
+          :class="{
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-purple-300 cursor-pointer mx-1': true,
+            blinking: markedAsCorrect != undefined && !showCorrect,
+          }"
+        >
+          <Icon name="solar:question-square-broken" class="" />
+        </div>
 
         <span
           class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
@@ -47,7 +50,6 @@
           Verificar resposta
         </span>
       </div>
-      
     </div>
     <h1 class="text-lg">{{ question.title }}</h1>
 
@@ -111,7 +113,15 @@
 </template>
 
 <script setup lang="ts">
+import { useLocalStorage } from "@vueuse/core";
 import type { IQuestion } from "~/interfaces/question.interface";
+
+const storage = useLocalStorage("credentials", null);
+
+const authorization = computed(() => {
+  const data = JSON.parse(storage.value ?? "");
+  return data.token;
+});
 
 const props = defineProps<{
   question: IQuestion;
@@ -120,6 +130,7 @@ const props = defineProps<{
 const showCorrect = ref<boolean>(false);
 const markedAsWrong = ref<number[]>([]);
 const markedAsCorrect = ref<number>();
+const savedQuestion = ref<boolean>();
 
 const correctAnswer = computed(() => {
   return (
@@ -151,6 +162,35 @@ function onMarkAsCorrect(index: number) {
 
   if (markedAsWrong.value.length == 3) {
     // onHandleCorrect();
+  }
+}
+
+const body = computed(() => {
+  return {
+    question: {
+      ...props.question,
+    },
+  };
+});
+
+const { execute, data, status } = useFetch(
+  "http://localhost:3000/users/save-question",
+  {
+    immediate: false,
+    method: "post",
+    headers: {
+      authorization: authorization.value,
+    },
+    body,
+    watch: false,
+  }
+);
+
+async function onSaveQuestion() {
+  execute();
+
+  if (data.value) {
+    savedQuestion.value = true;
   }
 }
 </script>
