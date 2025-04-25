@@ -117,7 +117,7 @@
     <div class="flex mt-10">
       <button
         @click="onSubmit()"
-        class="bg-gradient-to-r from-purple-400 to-purple-500 rounded-lg w-full h-full hover:from-purple-300 hover:to-purple-500 py-4 px-4 text-zinc-50"
+        class=" rounded-lg w-full h-full bg-zinc-800 hover:bg-zinc-900 py-4 px-4 text-zinc-50"
       >
         <b>ENTRAR</b>
       </button>

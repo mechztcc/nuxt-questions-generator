@@ -66,7 +66,7 @@
 
           <div class="flex w-full mt-3">
             <button
-              class="bg-purple-400 rounded-lg w-full h-full hover:from-purple-300 hover:to-purple-500 py-1 px-1 text-zinc-50"
+              class="bg-zinc-800 hover:bg-zinc-900 rounded-lg w-full h-full py-1 px-1 text-zinc-50"
               @click="execute()"
             >
               <b v-if="status !== 'pending'">Enviar</b>
