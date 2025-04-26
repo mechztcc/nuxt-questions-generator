@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col mx-10 bg-zinc-50 px-5 py-5 rounded-lg mt-10">
+  <div class="flex flex-col bg-zinc-50 px-5 py-5 rounded-lg mt-10">
     <div class="flex items-end" v-if="correctAnswer && showCorrect">
       <div class="flex w-fit bg-green-300 text-zinc-50 px-1 py-1 rounded-lg">
         <Icon name="solar:cup-star-broken" size="1.5em" class="" />
@@ -15,7 +15,7 @@
     </div>
 
     <div class="flex justify-end mb-5">
-      <div class="relative group" @click="onSaveQuestion()">
+      <div class="relative group">
         <div
           :class="{
             'flex items-center justify-center w-fit px-2 py-2 rounded-full cursor-pointer': true,
@@ -24,7 +24,12 @@
             'bg-red-200': question.level == 'difícil',
           }"
         >
-          <Icon name="solar:star-bold" class="text-zinc-50" v-for="(item, index) in starsLevels" :key="index"/>
+          <Icon
+            name="solar:star-bold"
+            class="text-zinc-50"
+            v-for="(item, index) in starsLevels"
+            :key="index"
+          />
         </div>
 
         <span
@@ -39,7 +44,7 @@
           :class="{
             'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-purple-300 cursor-pointer  mx-1': true,
             'bg-purple-300': savedQuestion,
-            ' bg-zinc-100': !savedQuestion,
+            'bg-zinc-100': !savedQuestion,
           }"
         >
           <Icon name="solar:bookmark-line-duotone" class="" />
@@ -201,13 +206,11 @@ function onMarkAsCorrect(index: number) {
 
 const body = computed(() => {
   return {
-    question: {
-      ...props.question,
-    },
+    ...props.question,
   };
 });
 
-const { execute, data, status } = useFetch(
+const { execute, data } = useFetch(
   "http://localhost:3000/users/save-question",
   {
     immediate: false,
@@ -221,7 +224,7 @@ const { execute, data, status } = useFetch(
 );
 
 async function onSaveQuestion() {
-  execute();
+  await execute();
 
   if (data.value) {
     savedQuestion.value = true;

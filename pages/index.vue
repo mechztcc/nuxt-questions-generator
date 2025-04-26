@@ -77,7 +77,7 @@
         </div>
       </div>
 
-      <div class="col-span-3 mt-10" v-if="data">
+      <div class="col-span-3 mt-10 mx-10" v-if="data">
         <QuestionVisualizer
           v-for="(item, index) in data.questions"
           :key="index"
