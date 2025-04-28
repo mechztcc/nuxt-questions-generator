@@ -25,7 +25,7 @@
           <span
             class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
           >
-            Salvar arquivo
+            Salvar como .DOCX
           </span>
         </div>
 
@@ -50,7 +50,12 @@
     </div>
 
     <div class="col-span-3" v-if="markables">
-      <span class="text-zinc-800">Selecione quais questões você deseja salvar</span>
+      <div class="flex flex-col">
+        <span class="text-zinc-800"><b>Selecione quais questões você deseja salvar</b></span>
+        <span class="text-zinc-700 text-sm">03 questões selecionadas</span>
+
+        <button class="bg-zinc-800 px-3 py-3 rounded-lg w-fit text-zinc-50 mt-3">Gerar .DOCX</button>
+      </div>
     </div>
 
     <template v-if="showingQuestion">
@@ -60,7 +65,7 @@
     </template>
 
     <template v-if="data">
-      <div class="col-span-1" v-for="(item, index) in data" :key="index">
+      <div class="col-span-1" v-for="(item, index) in store.quests" :key="index">
         <CardQuestion :question="item" :markable="markables" @show-question="onReceiveQuest"/>
       </div>
     </template>
@@ -70,16 +75,17 @@
 <script lang="ts" setup>
 import { useLocalStorage } from "@vueuse/core";
 import type { IQuestion } from "~/interfaces/question.interface";
+import { useSavedQuestsStore } from "~/stores/saved-quests";
 
 definePageMeta({
   layout: "with-sidebar",
 });
 
+const store = useSavedQuestsStore()
 const markables = ref<boolean>(false);
 const showingQuestion = ref<IQuestion>()
 
 function onReceiveQuest(quest: IQuestion) {
-  console.log(quest);
   showingQuestion.value = quest;
 }
 
@@ -89,20 +95,33 @@ const authorization = computed(() => {
   const data = JSON.parse(storage.value ?? "");
   return data.token;
 });
-//
-const { data, status } = useFetch(
+
+
+const { data, status, execute } = useFetch<IQuestion[]>(
   "http://localhost:3000/users/list-questions",
   {
     method: "get",
     headers: {
       authorization: authorization.value,
     },
+    immediate: false
   }
 );
 
 function onHandleMarkables() {
   markables.value = !markables.value;
+  if(!markables.value) {
+    store.onUnmarkQuests();
+  }
 }
+
+onMounted(async () => {
+  await execute()
+
+  if(data.value) {
+    store.quests = data.value;
+  }
+})
 </script>
 
 <style>

@@ -3,7 +3,7 @@
     @click="onHandle"
     :class="{
       'flex flex-col justify-between bg-zinc-50 px-5 py-5 mt-10 h-full card rounded-lg border-2 border-transparent': true,
-      'border-zinc-800 ': selected,
+      'border-zinc-800 ': question.marked,
     }"
   >
     <div class="flex">
@@ -73,7 +73,7 @@ const props = defineProps<{
   markable: boolean;
 }>();
 
-const selected = ref<boolean>();
+const store = useSavedQuestsStore();
 const emits = defineEmits(["showQuestion"]);
 
 function onShowQuestion() {
@@ -88,7 +88,8 @@ function onHandle() {
     return;
   }
 
-  selected.value = !selected.value;
+  const quest = store.quests.filter(el => el.id == props.question.id)[0];
+  quest.marked = !quest.marked;
 }
 
 
@@ -106,6 +107,7 @@ const starsLevels = computed(() => {
 
   return total;
 });
+
 </script>
 
 <style scoped>
