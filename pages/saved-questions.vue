@@ -19,7 +19,10 @@
               'bg-zinc-50': !markables,
             }"
           >
-            <Icon name="solar:printer-2-broken" :class="{ 'text-zinc-50': markables }" />
+            <Icon
+              name="solar:printer-2-broken"
+              :class="{ 'text-zinc-50': markables }"
+            />
           </div>
 
           <span
@@ -30,7 +33,9 @@
         </div>
 
         <div class="relative group">
-          <div class="flex w-fit px-3 py-3 rounded-lg bg-zinc-50  hover:bg-zinc-800 hover:text-zinc-50 h-full mx-2">
+          <div
+            class="flex w-fit px-3 py-3 rounded-lg bg-zinc-50 hover:bg-zinc-800 hover:text-zinc-50 h-full mx-2"
+          >
             <Icon name="solar:filter-broken" class="" />
           </div>
 
@@ -51,24 +56,34 @@
 
     <div class="col-span-3" v-if="markables">
       <div class="flex flex-col">
-        <span class="text-zinc-800"><b>Selecione quais questões você deseja salvar</b></span>
-        <span class="text-zinc-700 text-sm">03 questões selecionadas</span>
+        <span class="text-zinc-800"
+          ><b>Selecione quais questões você deseja salvar</b></span
+        >
+        <span class="text-zinc-700 text-sm">{{ totalSaved }} questões selecionadas</span>
 
         <nuxt-link to="/activity-preview">
-          <button class="bg-zinc-800 px-3 py-3 rounded-lg w-fit text-zinc-50 mt-3">Pré-visualização</button>
+          <button
+            class="bg-zinc-800 px-3 py-3 rounded-lg w-fit text-zinc-50 mt-3"
+          >
+            Pré-visualização
+          </button>
         </nuxt-link>
       </div>
     </div>
 
-    <template v-if="showingQuestion">
+    <template v-if="store.showedQuestion">
       <div class="col-span-3">
-        <QuestionVisualizer :question="showingQuestion" />
+        <QuestionVisualizer :question="store.showedQuestion" />
       </div>
     </template>
 
     <template v-if="data">
-      <div class="col-span-1" v-for="(item, index) in store.quests" :key="index">
-        <CardQuestion :question="item" :markable="markables" @show-question="onReceiveQuest"/>
+      <div
+        class="col-span-1"
+        v-for="(item, index) in store.quests"
+        :key="index"
+      >
+        <CardQuestion :question="item" :markable="markables" />
       </div>
     </template>
   </div>
@@ -83,13 +98,11 @@ definePageMeta({
   layout: "with-sidebar",
 });
 
-const store = useSavedQuestsStore()
+const store = useSavedQuestsStore();
 const markables = ref<boolean>(false);
-const showingQuestion = ref<IQuestion>()
-
-function onReceiveQuest(quest: IQuestion) {
-  showingQuestion.value = quest;
-}
+const totalSaved = computed(
+  () => store.quests.filter((el) => el.marked).length
+);
 
 const storage = useLocalStorage("credentials", null);
 
@@ -98,7 +111,6 @@ const authorization = computed(() => {
   return data.token;
 });
 
-
 const { data, status, execute } = useFetch<IQuestion[]>(
   "http://localhost:3000/users/list-questions",
   {
@@ -106,24 +118,24 @@ const { data, status, execute } = useFetch<IQuestion[]>(
     headers: {
       authorization: authorization.value,
     },
-    immediate: false
+    immediate: false,
   }
 );
 
 function onHandleMarkables() {
   markables.value = !markables.value;
-  if(!markables.value) {
+  if (!markables.value) {
     store.onUnmarkQuests();
   }
 }
 
 onMounted(async () => {
-  await execute()
+  await execute();
 
-  if(data.value) {
+  if (data.value) {
     store.quests = data.value;
   }
-})
+});
 </script>
 
 <style>

@@ -2,7 +2,7 @@
   <div
     @click="onHandle"
     :class="{
-      'flex flex-col justify-between bg-zinc-50 px-5 py-5 mt-10 h-full card rounded-lg border-2 border-transparent': true,
+      'flex flex-col justify-between bg-zinc-50 px-5 py-5 mt-3 h-full card rounded-lg border-2 border-transparent': true,
       'border-zinc-800 ': question.marked,
     }"
   >
@@ -50,13 +50,19 @@
     <div class="flex justify-end">
       <div class="relative group" @click="onShowQuestion()">
         <div
-          class="flex items-center justify-center w-fit px-2 py-2 rounded-full cursor-pointer hover:bg-zinc-200"
+          :class="{
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full cursor-pointer': true,
+            'bg-zinc-700 text-zinc-50': store.showedQuestion?.id == question.id,
+            'hover:bg-zinc-200': store.showedQuestion?.id !== question.id
+          }"
         >
           <Icon name="solar:folder-open-broken" />
         </div>
 
         <span
-          class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+          :class="{
+            'absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10': true,
+          }"
         >
           Detalhes
         </span>
@@ -78,9 +84,15 @@ const emits = defineEmits(["showQuestion"]);
 
 function onShowQuestion() {
   const data = {
-    ...props.question
+    ...props.question,
+  };
+
+  if(store.showedQuestion?.id == data.id) {
+    store.showedQuestion = null;
+    return
   }
-  emits("showQuestion", data);
+  
+  store.showedQuestion = data;
 }
 
 function onHandle() {
@@ -88,10 +100,9 @@ function onHandle() {
     return;
   }
 
-  const quest = store.quests.filter(el => el.id == props.question.id)[0];
+  const quest = store.quests.filter((el) => el.id == props.question.id)[0];
   quest.marked = !quest.marked;
 }
-
 
 const starsLevels = computed(() => {
   const { level } = props.question;
@@ -107,7 +118,6 @@ const starsLevels = computed(() => {
 
   return total;
 });
-
 </script>
 
 <style scoped>

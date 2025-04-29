@@ -60,6 +60,8 @@
         </span>
       </div>
 
+
+
       <div class="relative group">
         <div
           @click="onHandleCorrect"
@@ -77,6 +79,26 @@
           Verificar resposta
         </span>
       </div>
+
+
+      <div class="relative group">
+        <div
+          @click="store.onCloseShowedQuestion()"
+          :class="{
+            'flex items-center justify-center w-fit px-2 py-2 rounded-full bg-zinc-100 hover:bg-red-300 cursor-pointer': true,
+          }"
+        >
+          <Icon name="solar:close-square-broken" class="" />
+        </div>
+
+        <span
+          class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+        >
+          Fechar
+        </span>
+      </div>
+
+
     </div>
     <h1 class="text-lg">{{ question.title }}</h1>
 
@@ -154,6 +176,7 @@ import { useLocalStorage } from "@vueuse/core";
 import type { IQuestion } from "~/interfaces/question.interface";
 
 const storage = useLocalStorage("credentials", null);
+const store = useSavedQuestsStore()
 
 const authorization = computed(() => {
   const data = JSON.parse(storage.value ?? "");
