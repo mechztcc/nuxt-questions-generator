@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col bg-zinc-50 px-5 py-5 rounded-lg mt-10">
+  <div :class="{ 'flex flex-col px-5 py-5 rounded-lg mt-10': true, 'bg-white': printable, 'bg-zinc-50': !printable }">
     <div class="flex items-end" v-if="correctAnswer && showCorrect">
       <div class="flex w-fit bg-green-300 text-zinc-50 px-1 py-1 rounded-lg">
         <Icon name="solar:cup-star-broken" size="1.5em" class="" />
@@ -7,14 +7,17 @@
       <span class="text-md mx-2 text-green-400">Você acertou</span>
     </div>
 
-    <div class="flex items-end" v-if="!correctAnswer && showCorrect">
+    <div
+      class="flex items-end"
+      v-if="!correctAnswer && showCorrect && !printable"
+    >
       <div class="flex w-fit bg-red-300 text-zinc-50 px-1 py-1 rounded-lg">
         <Icon name="solar:close-circle-broken" size="1.5em" class="" />
       </div>
       <span class="text-md mx-2 text-red-400">Você errou</span>
     </div>
 
-    <div class="flex justify-end mb-5">
+    <div class="flex justify-end mb-5 header" v-if="!printable">
       <div class="relative group">
         <div
           :class="{
@@ -104,32 +107,42 @@
               'line-through': markedAsWrong.includes(index),
             }"
           >
-            {{ item.value }}</span
-          >
+            <div class="text-zinc-800">
+              {{ item.value }}
+            </div>
+          </span>
         </div>
 
         <div class="flex items-center">
-          <div
-            @click="onMarkAsCorrect(index)"
-            :class="{
-              'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-green-300  cursor-pointer mx-1': true,
-              'bg-green-300': markedAsCorrect == index,
-              'bg-zinc-100 ': markedAsCorrect != index,
-            }"
-          >
-            <Icon name="solar:check-circle-broken" class="" />
-          </div>
+          <template v-if="printable">
+            <div
+              class="flex items-center justify-center w-fit px-4 py-4 rounded-full border border-zinc-300 cursor-pointer mx-1"
+            ></div>
+          </template>
 
-          <div
-            @click="onMarkAsWrong(index)"
-            :class="{
-              'flex items-center justify-center w-fit px-2 py-2 rounded-full  hover:bg-red-300 hover:text-zinc-50 cursor-pointer mx-1': true,
-              'bg-red-300': markedAsWrong.includes(index),
-              'bg-zinc-100': !markedAsWrong.includes(index),
-            }"
-          >
-            <Icon name="solar:scissors-square-broken" class="" />
-          </div>
+          <template v-if="!printable">
+            <div
+              @click="onMarkAsCorrect(index)"
+              :class="{
+                'flex items-center justify-center w-fit px-2 py-2 rounded-full hover:bg-green-300  cursor-pointer mx-1': true,
+                'bg-green-300': markedAsCorrect == index,
+                'bg-zinc-100 ': markedAsCorrect != index,
+              }"
+            >
+              <Icon name="solar:check-circle-broken" class="" />
+            </div>
+
+            <div
+              @click="onMarkAsWrong(index)"
+              :class="{
+                'flex items-center justify-center w-fit px-2 py-2 rounded-full  hover:bg-red-300 hover:text-zinc-50 cursor-pointer mx-1': true,
+                'bg-red-300': markedAsWrong.includes(index),
+                'bg-zinc-100': !markedAsWrong.includes(index),
+              }"
+            >
+              <Icon name="solar:scissors-square-broken" class="" />
+            </div>
+          </template>
         </div>
       </div>
     </div>
@@ -149,6 +162,7 @@ const authorization = computed(() => {
 
 const props = defineProps<{
   question: IQuestion;
+  printable?: boolean;
 }>();
 
 const showCorrect = ref<boolean>(false);

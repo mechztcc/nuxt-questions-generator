@@ -14,7 +14,7 @@
         <div class="relative group" @click="onHandleMarkables()">
           <div
             :class="{
-              'flex w-fit px-3 py-3 rounded-lg h-full hover:bg-zinc-200': true,
+              'flex w-fit px-3 py-3 rounded-lg h-full hover:bg-zinc-800 hover:text-zinc-50': true,
               'bg-zinc-800': markables,
               'bg-zinc-50': !markables,
             }"
@@ -30,7 +30,7 @@
         </div>
 
         <div class="relative group">
-          <div class="flex w-fit px-3 py-3 rounded-lg bg-zinc-50 hover:bg-zinc-200 h-full mx-2">
+          <div class="flex w-fit px-3 py-3 rounded-lg bg-zinc-50  hover:bg-zinc-800 hover:text-zinc-50 h-full mx-2">
             <Icon name="solar:filter-broken" class="" />
           </div>
 
@@ -54,7 +54,9 @@
         <span class="text-zinc-800"><b>Selecione quais questões você deseja salvar</b></span>
         <span class="text-zinc-700 text-sm">03 questões selecionadas</span>
 
-        <button class="bg-zinc-800 px-3 py-3 rounded-lg w-fit text-zinc-50 mt-3">Gerar .DOCX</button>
+        <nuxt-link to="/activity-preview">
+          <button class="bg-zinc-800 px-3 py-3 rounded-lg w-fit text-zinc-50 mt-3">Pré-visualização</button>
+        </nuxt-link>
       </div>
     </div>
 
