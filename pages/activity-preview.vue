@@ -13,10 +13,17 @@
       <div class="col-span-3">
         <div class="flex justify-end">
           <button
-            class="bg-zinc-800 py-3 px-3 mt-3 rounded-lg text-zinc-50"
+            class="bg-zinc-800 py-3 px-3 mt-3 rounded-lg text-zinc-50 mr-3"
             @click="exportAsPDF"
           >
-            Imprimir
+            Imprimir PDF
+          </button>
+
+          <button
+            class="bg-zinc-800 py-3 px-3 mt-3 rounded-lg text-zinc-50"
+            @click="exportAsDOCX()"
+          >
+            Imprimir DOCX
           </button>
         </div>
       </div>
@@ -39,11 +46,12 @@
 
 <script lang="ts" setup>
 import { useLoaderStore } from "~/stores/loader";
+import { Document, Packer, Paragraph, TextRun } from "docx";
+import { saveAs } from "file-saver";
 
 definePageMeta({
   layout: "with-sidebar",
 });
-
 
 let html2pdf = null;
 
@@ -56,7 +64,7 @@ if (import.meta.client) {
 const printable = ref<boolean>(false);
 
 const store = useSavedQuestsStore();
-const loader = useLoaderStore()
+const loader = useLoaderStore();
 
 async function exportAsPDF() {
   printable.value = true;
@@ -75,6 +83,50 @@ async function exportAsPDF() {
   await html2pdf().set(options).from(element).save();
   printable.value = false;
   loader.isLoading = false;
+}
+
+async function exportAsDOCX() {
+  const selectedQuestions = store.quests.filter((el) => el.marked);
+
+  const paragrafos = selectedQuestions.flatMap((q, i) => [
+    
+    new Paragraph({
+      children: [
+        new TextRun({
+          text: `${i + 1}. ${q.title}`,
+          bold: true,
+          size: 24,
+        }),
+      ],
+      spacing: { after: 300, before: 600 },
+    }),
+    ...q.answers.map(
+      (opt, index) =>
+        new Paragraph({
+          children: [
+            new TextRun({
+              text: `${String.fromCharCode(65 + index)}. ${opt.value}`,
+              size: 24
+            }),
+          ],
+          spacing: { after: 50 },
+        })
+    ),
+  ]);
+
+  const doc = new Document({
+    sections: [
+      {
+        properties: {},
+        children: [
+          ...paragrafos,
+        ],
+      },
+    ],
+  });
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob, "prova-final.docx");
 }
 </script>
 
