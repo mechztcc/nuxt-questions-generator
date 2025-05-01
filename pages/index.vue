@@ -30,59 +30,101 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-3">
-      <div class="col-span-1">
-        <div
-          class="flex flex-col items-center md:mx-10 rounded-lg bg-zinc-50 mt-5 w-fit px-3 py-3 w-full"
-          v-if="file"
-        >
-          <div class="flex justify-end w-full mb-2">
-            <div
-              class="flex w-fit px-1 py-1 rounded-lg bg-red-200 relative group cursor-pointer"
-            >
-              <Icon
-                name="solar:trash-bin-minimalistic-2-bold"
-                size="1em"
-                class="bg-red-400 cursor-pointer"
-                @click="onRemoveFile"
-              />
-
-              <span
-                class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
-              >
-                Remover arquivo
-              </span>
-            </div>
-          </div>
-
-          <div class="flex items-center w-full">
-            <Icon
-              name="solar:file-send-bold"
-              size="1em"
-              class="bg-purple-400 mx-3"
-            />
-            <span class="text-zinc-500 text-start">{{ file.name }}</span>
-          </div>
-
-          <div class="flex w-full mt-3">
-            <button
-              class="bg-zinc-800 hover:bg-zinc-900 rounded-lg w-full h-full py-1 px-1 text-zinc-50"
-              @click="execute()"
-            >
-              <b v-if="status !== 'pending'">Enviar</b>
-
-              <b v-if="status == 'pending'"> Enviando </b>
-            </button>
-          </div>
+    <div
+      class="grid grid-cols-5 mx-10 mt-10 px-5 py-3 gap-5 rounded-lg bg-zinc-50"
+    >
+      <div class="col-span-4">
+        <div class="flex flex-col">
+          <h1 class="text-lg"><b>Detalhes</b></h1>
+          <span class="text-md text-zinc-700 mb-5"
+            >Preencha o formulário abaixo com as especificações
+          </span>
         </div>
       </div>
 
-      <div class="col-span-3 mt-10 mx-10" v-if="data">
+      <div class="col-span-1">
+        <div class="flex justify-end">
+          <Icon
+            @click="onHandleDetails()"
+            name="solar:square-alt-arrow-down-broken"
+            class="cursor-pointer"
+          />
+        </div>
+      </div>
+
+      <template v-if="showDetails">
+        <div class="col-span-1">
+          <div class="flex flex-col">
+            <h5 class="text-md">Qtd de questões</h5>
+            <input type="number" min="1" class="py-2 px-2 mt-2 outline-none" v-model="questionsCount" />
+          </div>
+        </div>
+
+        <div class="col-span-1">
+          <div class="flex flex-col">
+            <h5 class="text-md">Qtd de alternativas</h5>
+            <input type="number" min="2" class="py-2 px-2 mt-2 outline-none" v-model="alternatives" />
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="grid grid-cols-1">
+      <div class="col-span-1 mx-10 mt-10" v-if="data">
         <QuestionVisualizer
           v-for="(item, index) in data.questions"
           :key="index"
           :question="item"
         />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 mx-10 mt-10">
+      <div class="col-span-1">
+        <div
+          class="flex items-center rounded-lg bg-zinc-50 w-fit px-3 py-3 w-full"
+          v-if="file"
+        >
+          <div class="flex items-center w-full">
+            <Icon
+              name="solar:file-send-bold"
+              size="2em"
+              class="bg-purple-400 mx-3"
+            />
+            <span class="text-zinc-500 text-start">{{ file.name }}</span>
+
+            <div class="flex justify-end w-full">
+              <div
+                class="flex w-fit px-1 py-1 rounded-lg bg-red-200 relative group cursor-pointer"
+              >
+                <Icon
+                  name="solar:trash-bin-minimalistic-2-bold"
+                  size="1em"
+                  class="bg-red-400 cursor-pointer"
+                  @click="onRemoveFile"
+                />
+
+                <span
+                  class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+                >
+                  Remover arquivo
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-3 mt-5">
+        <div class="col-span-1 col-start-3">
+          <button
+            class="bg-zinc-800 hover:bg-zinc-900 rounded-lg w-full h-full py-3 px-2 text-zinc-50"
+            @click="execute()"
+          >
+            <b v-if="status !== 'pending'">Enviar</b>
+
+            <b v-if="status == 'pending'"> Enviando </b>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -101,6 +143,10 @@ const inputFile = ref<HTMLDivElement>();
 
 const file = ref();
 const fileContent = ref();
+const showDetails = ref();
+
+const alternatives = defineModel('alternatives', { default: 2 })
+const questionsCount = defineModel('questionsCount',{ default: 1 })
 
 function onRemoveFile() {
   file.value = null;
@@ -108,6 +154,10 @@ function onRemoveFile() {
 
 function onClick() {
   inputFile.value?.click();
+}
+
+function onHandleDetails() {
+  showDetails.value = !showDetails.value;
 }
 
 function onDrop(files: File[] | null) {
@@ -143,6 +193,8 @@ async function extractTextFromDocx(file: File) {
 const body = computed(() => {
   return {
     content: fileContent.value,
+    alternatives: alternatives.value,
+    questionsCount: questionsCount.value
   };
 });
 
