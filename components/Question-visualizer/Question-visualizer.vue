@@ -102,7 +102,7 @@
     </div>
     <h1 class="text-lg">{{ question.title }}</h1>
 
-    <div class="flex flex-col mt-5" v-if="question.questionType == 'closed'">
+    <div class="flex flex-col mt-5" v-if="question.type == 'closed'">
       <div
         :class="{
           'flex items-center justify-between w-full rounded-lg px-4 py-2 cursor-pointer mt-1': true,
@@ -169,7 +169,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col mt-5" v-if="question.questionType == 'opened'">
+    <div class="flex flex-col mt-5" v-if="question.type == 'opened'">
       <textarea rows="5" cols="5" class="outline-none px-3 py-3"></textarea>
     </div>
   </div>

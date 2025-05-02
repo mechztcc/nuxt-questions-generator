@@ -222,7 +222,7 @@ async function extractTextFromDocx(file: File) {
 const body = computed(() => {
   return {
     content: fileContent.value,
-    questionsType: questionsType.value,
+    type: questionsType.value,
     alternatives: questionsType.value == 'closed' ? alternatives.value : 0,
     questionsCount: questionsCount.value,
     model: IAmodel.value
