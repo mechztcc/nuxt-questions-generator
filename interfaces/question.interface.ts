@@ -3,6 +3,6 @@ export interface IQuestion {
   title: string;
   level: 'fácil' | 'normal' | 'difícil',
   type?: 'opened' | 'closed',
-  answers: { correct: boolean; value: string }[];
+  answers: { id?: string; correct: boolean; value: string }[];
   marked?: boolean
 }

@@ -1,5 +1,11 @@
 <template>
-  <div :class="{ 'flex flex-col px-5 py-5 rounded-lg mt-10': true, 'bg-white': printable, 'bg-zinc-50': !printable }">
+  <div
+    :class="{
+      'flex flex-col px-5 py-5 rounded-lg mt-10': true,
+      'bg-white': printable,
+      'bg-zinc-50': !printable,
+    }"
+  >
     <div class="flex items-end" v-if="correctAnswer && showCorrect">
       <div class="flex w-fit bg-green-300 text-zinc-50 px-1 py-1 rounded-lg">
         <Icon name="solar:cup-star-broken" size="1.5em" class="" />
@@ -60,8 +66,6 @@
         </span>
       </div>
 
-
-
       <div class="relative group">
         <div
           @click="onHandleCorrect"
@@ -80,7 +84,6 @@
         </span>
       </div>
 
-
       <div class="relative group">
         <div
           @click="store.onCloseShowedQuestion()"
@@ -97,8 +100,6 @@
           Fechar
         </span>
       </div>
-
-
     </div>
     <h1 class="text-lg">{{ question.title }}</h1>
 
@@ -170,7 +171,12 @@
     </div>
 
     <div class="flex flex-col mt-5" v-if="question.type == 'opened'">
-      <textarea rows="5" cols="5" class="outline-none px-3 py-3"></textarea>
+      <textarea
+        rows="5"
+        cols="5"
+        class="outline-none px-3 py-3"
+        v-model="textarea"
+      ></textarea>
     </div>
   </div>
 </template>
@@ -180,7 +186,7 @@ import { useLocalStorage } from "@vueuse/core";
 import type { IQuestion } from "~/interfaces/question.interface";
 
 const storage = useLocalStorage("credentials", null);
-const store = useSavedQuestsStore()
+const store = useSavedQuestsStore();
 
 const authorization = computed(() => {
   const data = JSON.parse(storage.value ?? "");
@@ -196,6 +202,8 @@ const showCorrect = ref<boolean>(false);
 const markedAsWrong = ref<number[]>([]);
 const markedAsCorrect = ref<number>();
 const savedQuestion = ref<boolean>();
+
+const textarea = defineModel("", { default: "" });
 
 const starsLevels = computed(() => {
   const { level } = props.question;
@@ -219,8 +227,25 @@ const correctAnswer = computed(() => {
   );
 });
 
-function onHandleCorrect() {
-  showCorrect.value = !showCorrect.value;
+async function onHandleCorrect() {
+
+  if(props.question.type == 'closed') {
+    showCorrect.value = true;
+    return
+  }
+  
+  const response = await $fetch("http://localhost:3000/users/verify-response", {
+    method: "POST",
+    headers: {
+      authorization: authorization.value,
+    },
+    body: {
+      answerId: props.question.answers[0].id,
+      value: textarea.value,
+    },
+  });
+
+  console.log(response);
 }
 
 function onMarkAsWrong(index: number) {
