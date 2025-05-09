@@ -177,6 +177,8 @@
         class="outline-none px-3 py-3"
         v-model="textarea"
       ></textarea>
+
+      <span class="my-2" v-if="contextIsCorrect">{{ contextIsCorrect }}</span>
     </div>
   </div>
 </template>
@@ -205,6 +207,9 @@ const savedQuestion = ref<boolean>();
 
 const textarea = defineModel("", { default: "" });
 
+const isCorrect = ref<boolean>();
+const contextIsCorrect = ref<string>("");
+
 const starsLevels = computed(() => {
   const { level } = props.question;
 
@@ -221,31 +226,29 @@ const starsLevels = computed(() => {
 });
 
 const correctAnswer = computed(() => {
-  return (
-    props.question.answers.findIndex((el) => el.correct) ==
-    markedAsCorrect.value
-  );
+  return (props.question.answers.findIndex((el) => el.correct) == markedAsCorrect.value) || isCorrect.value;
 });
 
 async function onHandleCorrect() {
-
-  if(props.question.type == 'closed') {
+  if (props.question.type == "closed") {
     showCorrect.value = true;
-    return
+    return;
   }
-  
+
   const response = await $fetch("http://localhost:3000/users/verify-response", {
     method: "POST",
     headers: {
       authorization: authorization.value,
     },
     body: {
-      answerId: props.question.answers[0].id,
+      question: props.question.title,
       value: textarea.value,
+      context: props.question.context,
     },
   });
 
-  console.log(response);
+  isCorrect.value = response.isCorrect;
+  contextIsCorrect.value = response.context;
 }
 
 function onMarkAsWrong(index: number) {
