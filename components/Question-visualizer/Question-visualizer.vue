@@ -178,7 +178,18 @@
         v-model="textarea"
       ></textarea>
 
-      <span class="my-2" v-if="contextIsCorrect">{{ contextIsCorrect }}</span>
+      <div
+        v-if="contextIsCorrect"
+        :class="{
+          'flex flex-col w-full px-2 py-2 mt-3 rounded-lg': true,
+          'bg-green-100': isCorrect,
+          'bg-red-100': !isCorrect,
+        }"
+      >
+        <span class="my-2">
+          "{{ contextIsCorrect }}" - IA
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -226,7 +237,10 @@ const starsLevels = computed(() => {
 });
 
 const correctAnswer = computed(() => {
-  return (props.question.answers.findIndex((el) => el.correct) == markedAsCorrect.value) || isCorrect.value;
+  return (
+    props.question.answers.findIndex((el) => el.correct) ==
+      markedAsCorrect.value || isCorrect.value
+  );
 });
 
 async function onHandleCorrect() {
@@ -249,6 +263,7 @@ async function onHandleCorrect() {
 
   isCorrect.value = response.isCorrect;
   contextIsCorrect.value = response.context;
+  showCorrect.value = true;
 }
 
 function onMarkAsWrong(index: number) {
