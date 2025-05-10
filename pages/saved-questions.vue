@@ -107,8 +107,8 @@ const totalSaved = computed(
 const storage = useLocalStorage("credentials", null);
 
 const authorization = computed(() => {
-  const data = JSON.parse(storage.value ?? "");
-  return data.token;
+  const data = storage.value ? JSON.parse(storage.value) : null;
+  return data?.token;
 });
 
 const { data, status, execute } = useFetch<IQuestion[]>(

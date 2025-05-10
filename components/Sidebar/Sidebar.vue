@@ -12,10 +12,10 @@
     <div class="flex flex-col h-full">
       <button
         @click="item.action()"
-        :class="[
-          'flex py-3 px-5 items-center justify-start w-full hover:bg-zinc-800 hover:text-zinc-50 rounded-lg my-1',
-          item.active() ? 'bg-zinc-800 text-zinc-50' : '',
-        ]"
+        :class="{
+          'flex py-3 px-5 items-center justify-start w-full hover:bg-zinc-800 hover:text-zinc-50 rounded-lg my-1': true,
+          'bg-zinc-800 text-zinc-50': item.active(),
+        }"
         v-for="(item, index) in items"
         :key="index"
       >
@@ -43,15 +43,15 @@ const router = useRouter();
 const storage = useLocalStorage("credentials", null);
 
 const user = computed(() => {
-  const parsed = JSON.parse(storage.value ?? "");
-  return parsed.name ?? "Usuário não encontrado";
+  const parsed = storage.value ? JSON.parse(storage.value) : null;
+  return parsed?.name ?? "Usuário não encontrado";
 });
 
 const items = [
   {
     name: "Home",
     icon: "solar:buildings-bold",
-    active: () => routes.fullPath == '/',
+    active: () => routes.fullPath == "/",
     action: () => {
       router.push("/");
     },

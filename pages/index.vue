@@ -163,6 +163,7 @@ import mammoth from "mammoth";
 
 definePageMeta({
   layout: "with-sidebar",
+  middleware: ['auth']
 });
 
 const dropZoneRef = ref<HTMLDivElement>();

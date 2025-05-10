@@ -13,7 +13,6 @@
 import { useLoaderStore } from "~/stores/loader";
 
 const loader = useLoaderStore();
-
 </script>
 
 <style></style>

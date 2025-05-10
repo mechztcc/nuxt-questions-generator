@@ -12,7 +12,7 @@
       <label for="email"><b>E-mail</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg  mt-2 bg-white': true,
           'border-red-200': errors.email,
         }"
       >
@@ -24,7 +24,7 @@
             'text-purple-300': email,
           }"
         />
-        <input type="text" class="w-full h-full outline-none" v-model="email" />
+        <input type="text" class="w-full h-full outline-none py-3 px-3" v-model="email" />
       </div>
 
       <p v-if="errors.email" class="text-red-400 text-sm mt-1">
@@ -36,7 +36,7 @@
       <label for="password"><b>Senha</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg  mt-2 bg-white': true,
           'border-red-200': errors.password,
         }"
       >
@@ -50,7 +50,7 @@
         />
         <input
           type="password"
-          class="w-full h-full outline-none"
+          class="w-full h-full outline-none py-3 px-3"
           v-model="password"
         />
       </div>

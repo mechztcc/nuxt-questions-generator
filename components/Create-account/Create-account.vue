@@ -12,7 +12,7 @@
       <label for="email"><b>Nome</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg  mt-2 bg-white': true,
           'border-red-200': errors.name,
         }"
       >
@@ -24,7 +24,7 @@
             'text-purple-300': name,
           }"
         />
-        <input type="text" class="w-full h-full outline-none" v-model="name" />
+        <input type="text" class="w-full h-full outline-none py-3 px-3" v-model="name" />
       </div>
       <p v-if="errors.name" class="text-red-400 text-sm mt-1">
         {{ errors.name }}
@@ -35,7 +35,7 @@
       <label for="email"><b>E-mail</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg  mt-2 bg-white': true,
           'border-red-200': errors.email,
         }"
       >
@@ -47,7 +47,7 @@
             'text-purple-300': email,
           }"
         />
-        <input type="text" class="w-full h-full outline-none" v-model="email" />
+        <input type="text" class="w-full h-full outline-none py-3 px-3" v-model="email" />
       </div>
       <p v-if="errors.email" class="text-red-400 text-sm mt-1">
         {{ errors.email }}
@@ -58,7 +58,7 @@
       <label for="email"><b>Senha</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg  mt-2 bg-white': true,
           'border-red-200': errors.password,
         }"
       >
@@ -73,7 +73,7 @@
         <input
           type="password"
           placeholder="******"
-          class="w-full h-full outline-none"
+          class="w-full h-full outline-none py-3 px-3 "
           v-model="password"
         />
       </div>
@@ -86,7 +86,7 @@
       <label for="email"><b>Confirmar senha</b></label>
       <div
         :class="{
-          'flex items-center border rounded-lg py-3 px-3 mt-2 bg-white': true,
+          'flex items-center border rounded-lg mt-2 bg-white': true,
           'border-red-200': errors.confirmPass,
         }"
       >
@@ -101,7 +101,7 @@
         <input
           type="password"
           placeholder="******"
-          class="w-full h-full outline-none"
+          class="w-full h-full outline-none py-3 px-3"
           v-model="confirmPass"
         />
       </div>
