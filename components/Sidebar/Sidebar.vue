@@ -64,6 +64,14 @@ const items = [
       router.push("/saved-questions");
     },
   },
+  {
+    name: "Visualização",
+    icon: "solar:bookmark-line-duotone",
+    active: () => routes.fullPath.includes("/activity-preview"),
+    action: () => {
+      router.push("/activity-preview");
+    },
+  },
 ];
 </script>
 

@@ -88,9 +88,8 @@ async function exportAsPDF() {
 async function exportAsDOCX() {
   const selectedQuestions = store.quests.filter((el) => el.marked);
 
-  const paragrafos = selectedQuestions.flatMap((q, i) => [
-    
-    new Paragraph({
+  const paragrafos = selectedQuestions.flatMap((q, i) => {
+    const questionParagraph = new Paragraph({
       children: [
         new TextRun({
           text: `${i + 1}. ${q.title}`,
@@ -99,28 +98,39 @@ async function exportAsDOCX() {
         }),
       ],
       spacing: { after: 300, before: 600 },
-    }),
-    ...q.answers.map(
-      (opt, index) =>
+    });
+
+    if (q.type === 'closed') {
+      const answerParagraphs = q.answers.map((opt, index) =>
         new Paragraph({
           children: [
             new TextRun({
               text: `${String.fromCharCode(65 + index)}. ${opt.value}`,
-              size: 24
+              size: 24,
             }),
           ],
           spacing: { after: 50 },
         })
-    ),
-  ]);
+      );
+      return [questionParagraph, ...answerParagraphs];
+    } else {
+      // Espaço em branco para o usuário escrever
+      const blankLines = Array.from({ length: 5 }).map(() =>
+        new Paragraph({
+          children: [new TextRun({ text: "", size: 24 })],
+          spacing: { after: 300 },
+        })
+      );
+
+      return [questionParagraph, ...blankLines];
+    }
+  });
 
   const doc = new Document({
     sections: [
       {
         properties: {},
-        children: [
-          ...paragrafos,
-        ],
+        children: [...paragrafos],
       },
     ],
   });
@@ -128,6 +138,8 @@ async function exportAsDOCX() {
   const blob = await Packer.toBlob(doc);
   saveAs(blob, "prova-final.docx");
 }
+
+
 </script>
 
 <style></style>
